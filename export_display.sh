@@ -1,0 +1,1 @@
+export DISPLAT=:0
