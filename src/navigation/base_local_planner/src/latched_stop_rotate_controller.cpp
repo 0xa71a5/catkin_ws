@@ -67,42 +67,63 @@ bool LatchedStopRotateController::isPositionReached(LocalPlannerUtil* planner_ut
 bool LatchedStopRotateController::isGoalReached(LocalPlannerUtil* planner_util,
     OdometryHelperRos& odom_helper,
     tf::Stamped<tf::Pose> global_pose) {
+    // global_pose is the current position
   double xy_goal_tolerance = planner_util->getCurrentLimits().xy_goal_tolerance;
   double rot_stopped_vel = planner_util->getCurrentLimits().rot_stopped_vel;
   double trans_stopped_vel = planner_util->getCurrentLimits().trans_stopped_vel;
+  static int failed_times = 0;
 
   //copy over the odometry information
   nav_msgs::Odometry base_odom;
   odom_helper.getOdom(base_odom);
 
   //we assume the global goal is the last point in the global plan
+  //here put target pose into goal_pose
   tf::Stamped<tf::Pose> goal_pose;
   if ( ! planner_util->getGoal(goal_pose)) {
     return false;
   }
 
+  // target (x,y)
   double goal_x = goal_pose.getOrigin().getX();
   double goal_y = goal_pose.getOrigin().getY();
+  double cur_x  = global_pose.getOrigin().x();
+  double cur_y  = global_pose.getOrigin().y();
+  ROS_INFO("lxcdebug: cur=(%3.1f,%3.1f) goal=(%3.1f,%3.1f) tolerance=%3.1f latch_tor=%d xy_tor=%d",
+          cur_x, cur_y, goal_x, goal_y, xy_goal_tolerance,
+          latch_xy_goal_tolerance_, xy_tolerance_latch_);
 
   base_local_planner::LocalPlannerLimits limits = planner_util->getCurrentLimits();
 
   //check to see if we've reached the goal position
   if ((latch_xy_goal_tolerance_ && xy_tolerance_latch_) ||
       base_local_planner::getGoalPositionDistance(global_pose, goal_x, goal_y) <= xy_goal_tolerance) {
+      ROS_INFO("lxcdebug: Yes! we reach the target position, next will check orientation");
     //if the user wants to latch goal tolerance, if we ever reach the goal location, we'll
     //just rotate in place
     if (latch_xy_goal_tolerance_ && ! xy_tolerance_latch_) {
-      ROS_DEBUG("Goal position reached (check), stopping and turning in place");
+      ROS_INFO("Goal position reached (check), stopping and turning in place");
       xy_tolerance_latch_ = true;
     }
     double goal_th = tf::getYaw(goal_pose.getRotation());
     double angle = base_local_planner::getGoalOrientationAngleDifference(global_pose, goal_th);
+    ROS_INFO("lxcdebug: fabs(angle) is %3.3f, angle tolerance is %3.3f, angle fail times = %d",
+            fabs(angle), limits.yaw_goal_tolerance, failed_times);
     //check to see if the goal orientation has been reached
     if (fabs(angle) <= limits.yaw_goal_tolerance) {
       //make sure that we're actually stopped before returning success
       if (base_local_planner::stopped(base_odom, rot_stopped_vel, trans_stopped_vel)) {
         return true;
+      } else {
+          ROS_INFO("lxcdebug: strange! the robot doesn't stop! wait for it for next loop");
       }
+    } else {
+        failed_times++;
+        if (failed_times >= 10) {
+            failed_times = 0;
+            ROS_INFO("lxcdebug: ================ failed 10 times =============");
+            return true;
+        }
     }
   }
   return false;
