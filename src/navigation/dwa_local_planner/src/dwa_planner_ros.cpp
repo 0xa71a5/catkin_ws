@@ -141,7 +141,7 @@ namespace dwa_local_planner {
     ROS_INFO("Got new plan, size=%d", orig_global_plan.size());
 
     int temp_size = orig_global_plan.size();
-    if (temp_size) {
+    if (0) {
         printf("                                                                                ");
         if (temp_size <= 10) {
             for (int i = 0; i < orig_global_plan.size(); i++) {
