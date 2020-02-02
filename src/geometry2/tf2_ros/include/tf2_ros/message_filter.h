@@ -216,7 +216,7 @@ public:
   {
     message_connection_.disconnect();
 
-    MessageFilter::clear();
+    clear();
 
     TF2_ROS_MESSAGEFILTER_DEBUG("Successful Transforms: %llu, Discarded due to age: %llu, Transform messages received: %llu, Messages received: %llu, Total dropped: %llu",
                            (long long unsigned int)successful_transform_count_,
@@ -286,10 +286,6 @@ public:
 
     messages_.clear();
     message_count_ = 0;
-
-    // remove pending callbacks in callback queue as well
-    if (callback_queue_)
-      callback_queue_->removeByID((uint64_t)this);
 
     warned_about_empty_frame_id_ = false;
   }
@@ -456,8 +452,8 @@ private:
     callback_handle_ = bc_.addTransformableCallback(boost::bind(&MessageFilter::transformable, this, _1, _2, _3, _4, _5));
   }
 
-  void transformable(tf2::TransformableRequestHandle request_handle, const std::string& /* target_frame */, const std::string& /* source_frame */,
-                     ros::Time /* time */, tf2::TransformableResult result)
+  void transformable(tf2::TransformableRequestHandle request_handle, const std::string& target_frame, const std::string& source_frame,
+                     ros::Time time, tf2::TransformableResult result)
   {
     namespace mt = ros::message_traits;
 

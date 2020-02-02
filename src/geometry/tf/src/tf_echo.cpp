@@ -42,12 +42,12 @@ public:
   echoListener()
   {
 
-  }
+  };
 
   ~echoListener()
   {
 
-  }
+  };
 
 private:
 
@@ -70,7 +70,7 @@ int main(int argc, char ** argv)
     return -1;
   }
 
-  ros::NodeHandle nh("~");
+  ros::NodeHandle nh;
 
   double rate_hz;
   if (argc == 4)
@@ -81,7 +81,8 @@ int main(int argc, char ** argv)
   else
   {
     // read rate parameter
-    nh.param("rate", rate_hz, 1.0);
+    ros::NodeHandle p_nh("~");
+    p_nh.param("rate", rate_hz, 1.0);
   }
   if (rate_hz <= 0.0)
   {
@@ -89,17 +90,6 @@ int main(int argc, char ** argv)
     return -1;
   }
   ros::Rate rate(rate_hz);
-
-  int precision(3);
-  if (nh.getParam("precision", precision))
-  {
-    if (precision < 1)
-    {
-      std::cerr << "Precision must be > 0\n";
-      return -1;
-    }
-    printf("Precision default value was overriden, new value: %d\n", precision);
-  }
 
   //Instantiate a local listener
   echoListener echoListener;
@@ -120,7 +110,7 @@ int main(int argc, char ** argv)
       {
         tf::StampedTransform echo_transform;
         echoListener.tf.lookupTransform(source_frameid, target_frameid, ros::Time(), echo_transform);
-        std::cout.precision(precision);
+        std::cout.precision(3);
         std::cout.setf(std::ios::fixed,std::ios::floatfield);
         std::cout << "At time " << echo_transform.stamp_.toSec() << std::endl;
         double yaw, pitch, roll;
@@ -147,5 +137,5 @@ int main(int argc, char ** argv)
     }
 
   return 0;
-}
+};
 

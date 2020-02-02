@@ -38,7 +38,6 @@
 #include <vector>
 #include <sstream>
 #include <map>
-#include <memory>
 
 #include <tf/exceptions.h>
 #include "tf/time_cache.h"
@@ -47,18 +46,6 @@
 #include "geometry_msgs/TwistStamped.h"
 
 #include <tf2_ros/buffer.h>
-#include <ros/macros.h>
-
-// Import/export for windows dll's and visibility for gcc shared libraries.
-#ifdef ROS_BUILD_SHARED_LIBS // ros is being built around shared libraries
-  #ifdef tf_EXPORTS // we are building a shared lib/dll
-    #define TF_DECL ROS_HELPER_EXPORT
-  #else // we are using shared lib/dll
-    #define TF_DECL ROS_HELPER_IMPORT
-  #endif
-#else // ros is being built around static libraries
-  #define TF_DECL
-#endif
 
 namespace tf
 {
@@ -69,7 +56,7 @@ std::string resolve(const std::string& prefix, const std::string& frame_name);
 std::string strip_leading_slash(const std::string& frame_name);
 
 /** \deprecated This has been renamed to tf::resolve */
-ROS_DEPRECATED static inline std::string remap(const std::string& prefix, const std::string& frame_name) { return tf::resolve(prefix, frame_name);}
+__attribute__((deprecated)) static inline std::string remap(const std::string& prefix, const std::string& frame_name) { return tf::resolve(prefix, frame_name);} ;
 
 enum ErrorValues { NO_ERROR = 0, LOOKUP_ERROR, CONNECTIVITY_ERROR, EXTRAPOLATION_ERROR};
 
@@ -100,7 +87,7 @@ typedef struct
  *
  * All function calls which pass frame ids can potentially throw the exception tf::LookupException
  */
-class TF_DECL Transformer
+class Transformer
 {
 public:
   /************* Constants ***********************/
@@ -328,7 +315,7 @@ public:
   void setExtrapolationLimit(const ros::Duration& distance);
 
   /**@brief Get the duration over which this transformer will cache */
-  ros::Duration getCacheLength() { return tf2_buffer_ptr_->getCacheLength();}
+  ros::Duration getCacheLength() { return tf2_buffer_.getCacheLength();}
 
   /**
    * \brief Add a callback that happens when a new transform has arrived
@@ -346,12 +333,9 @@ public:
   std::string getTFPrefix() const { return tf_prefix_;};
 
   //Declare that it is safe to call waitForTransform
-  void setUsingDedicatedThread(bool value) { tf2_buffer_ptr_->setUsingDedicatedThread(value);};
+  void setUsingDedicatedThread(bool value) { tf2_buffer_.setUsingDedicatedThread(value);};
   // Get the state of using_dedicated_thread_ from the buffer
-  bool isUsingDedicatedThread() { return tf2_buffer_ptr_->isUsingDedicatedThread();};
-
-  // Get a copy of the shared_ptr containing the tf2_ros::Buffer object
-  std::shared_ptr<tf2_ros::Buffer> getTF2BufferPtr() { return tf2_buffer_ptr_;};
+  bool isUsingDedicatedThread() { return tf2_buffer_.isUsingDedicatedThread();};
 
 protected:
 
@@ -400,7 +384,7 @@ protected:
 
 
 protected:
-  std::shared_ptr<tf2_ros::Buffer> tf2_buffer_ptr_;
+  tf2_ros::Buffer tf2_buffer_;
 
 };
 
@@ -421,7 +405,7 @@ inline void assertQuaternionValid(const tf::Quaternion & q)
     ss << "Quaternion malformed, magnitude: " << q.x()*q.x() + q.y()*q.y() + q.z()*q.z() + q.w()*q.w() << " should be 1.0" <<std::endl;
     throw tf::InvalidArgument(ss.str());
   }  //  ROS_ASSERT(std::fabs(q.x()*q.x() + q.y()*q.y() + q.z*q.z() + q.w()*q.w() - 1 < 0.01));
-}
+};
 
 /** \brief Throw InvalidArgument if quaternion is malformed */
 inline void assertQuaternionValid(const geometry_msgs::Quaternion & q)
@@ -439,6 +423,6 @@ inline void assertQuaternionValid(const geometry_msgs::Quaternion & q)
     ss << "Quaternion malformed, magnitude: " << q.x*q.x + q.y*q.y + q.z*q.z + q.w*q.w << " should be 1.0" <<std::endl;
     throw tf::InvalidArgument(ss.str());
   }  //  ROS_ASSERT(std::fabs(q.x()*q.x() + q.y()*q.y() + q.z*q.z() + q.w()*q.w() - 1 < 0.01));
-}
+};
 }
 #endif //TF_TF_H

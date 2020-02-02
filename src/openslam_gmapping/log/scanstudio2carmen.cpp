@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <assert.h>
-#include <gmapping/utils/point.h>
+#include <utils/point.h>
 
 #define MAXLINELENGHT (10240)
 #define MAXREADINGS   (10240)

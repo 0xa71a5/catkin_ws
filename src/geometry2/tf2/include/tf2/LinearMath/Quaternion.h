@@ -21,8 +21,6 @@ subject to the following restrictions:
 #include "Vector3.h"
 #include "QuadWord.h"
 
-#include <ros/macros.h>
-
 namespace tf2
 {
 
@@ -49,7 +47,7 @@ public:
    * @param yaw Angle around Y unless TF2_EULER_DEFAULT_ZYX defined then Z
    * @param pitch Angle around X unless TF2_EULER_DEFAULT_ZYX defined then Y
    * @param roll Angle around Z unless TF2_EULER_DEFAULT_ZYX defined then X */
-  ROS_DEPRECATED Quaternion(const tf2Scalar& yaw, const tf2Scalar& pitch, const tf2Scalar& roll)
+  Quaternion(const tf2Scalar& yaw, const tf2Scalar& pitch, const tf2Scalar& roll) __attribute__((deprecated))
 	{ 
 #ifndef TF2_EULER_DEFAULT_ZYX
 		setEuler(yaw, pitch, roll); 
@@ -112,7 +110,7 @@ public:
    * @param yaw Angle around Z
    * @param pitch Angle around Y
    * @param roll Angle around X */
-  ROS_DEPRECATED void setEulerZYX(const tf2Scalar& yaw, const tf2Scalar& pitch, const tf2Scalar& roll)
+  void setEulerZYX(const tf2Scalar& yaw, const tf2Scalar& pitch, const tf2Scalar& roll) __attribute__((deprecated))
 	{
           setRPY(roll, pitch, yaw);
 	}

@@ -21,7 +21,7 @@
  *****************************************************************/
 
 
-#include "gmapping/carmenwrapper/carmenwrapper.h"
+#include "carmenwrapper.h"
 
 using namespace GMapping;
 using namespace std;

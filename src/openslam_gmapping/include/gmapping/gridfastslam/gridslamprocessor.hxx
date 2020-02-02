@@ -10,16 +10,10 @@ inline void GridSlamProcessor::scanMatch(const double* plainReading){
   // sample a new pose from each scan in the reference
   
   double sumScore=0;
-  int loops = 0;
-
-  printf("lxcdebug: scanMatch begin, m_minimumScore=%.1f\n", m_minimumScore);
-  // This loop takes a 100 circles
   for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){
-      loops++;
     OrientedPoint corrected;
     double score, l, s;
     score=m_matcher.optimize(corrected, it->map, it->pose, plainReading);
-    printf("%.1f ", score);
     //    it->pose=corrected;
     if (score>m_minimumScore){
       it->pose=corrected;
@@ -41,10 +35,8 @@ inline void GridSlamProcessor::scanMatch(const double* plainReading){
     m_matcher.invalidateActiveArea();
     m_matcher.computeActiveArea(it->map, it->pose, plainReading);
   }
-  printf("\nlxcdebug: scanMatch finish\n");
-  printf("lxcdebug: scanMatch info: loops=%d\n", loops);
   if (m_infoStream)
-    m_infoStream << "Average Scan Matching Score(lxc)=" << sumScore/m_particles.size() << std::endl;	
+    m_infoStream << "Average Scan Matching Score=" << sumScore/m_particles.size() << std::endl;	
 }
 
 inline void GridSlamProcessor::normalize(){
@@ -146,7 +138,6 @@ inline bool GridSlamProcessor::resample(const double* plainReading, int adaptSiz
     m_particles.clear();
     std::cerr << "Done" << std::endl;
     std::cerr << "Copying Particles and  Registering  scans...";
-    printf("lxcdebug: ##### %s m_particles clear and resize to %d\n", __func__, temp.size());
     for (ParticleVector::iterator it=temp.begin(); it!=temp.end(); it++){
       it->setWeight(0);
       m_matcher.invalidateActiveArea();

@@ -79,9 +79,17 @@ namespace tf2_ros
   geometry_msgs::TransformStamped BufferClient::processGoal(const tf2_msgs::LookupTransformGoal& goal) const
   {
     client_.sendGoal(goal);
+    ros::Rate r(check_frequency_);
+    bool timed_out = false;
+    ros::Time start_time = ros::Time::now();
+    while(ros::ok() && !client_.getState().isDone() && !timed_out)
+    {
+      timed_out = ros::Time::now() > start_time + goal.timeout + timeout_padding_;
+      r.sleep();
+    }
 
     //this shouldn't happen, but could in rare cases where the server hangs
-    if(!client_.waitForResult(goal.timeout + timeout_padding_))
+    if(timed_out)
     {
       //make sure to cancel the goal the server is pursuing
       client_.cancelGoal();

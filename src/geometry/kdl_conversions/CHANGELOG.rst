@@ -2,9 +2,6 @@
 Changelog for package kdl_conversions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.12.0 (2018-05-02)
--------------------
-
 1.11.9 (2017-07-14)
 -------------------
 * Fix cmake dependency export usage

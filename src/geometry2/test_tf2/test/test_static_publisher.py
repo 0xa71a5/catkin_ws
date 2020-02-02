@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/python
 #***********************************************************
 #* Software License Agreement (BSD License)
 #*
@@ -40,6 +40,7 @@ import unittest
 
 import rospy
 PKG = 'test_tf2'
+import roslib; roslib.load_manifest(PKG)
 
 
 class TestStaticPublisher(unittest.TestCase):

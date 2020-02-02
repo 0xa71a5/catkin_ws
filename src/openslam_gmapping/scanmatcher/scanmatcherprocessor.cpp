@@ -1,6 +1,6 @@
 #include <iostream>
-#include "gmapping/scanmatcher/scanmatcherprocessor.h"
-#include "gmapping/scanmatcher/eig3.h"
+#include "scanmatcherprocessor.h"
+#include "eig3.h"
 
 //#define SCANMATHCERPROCESSOR_DEBUG
 namespace GMapping {

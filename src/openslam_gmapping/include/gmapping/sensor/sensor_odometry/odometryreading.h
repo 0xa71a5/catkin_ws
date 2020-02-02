@@ -4,7 +4,7 @@
 #include <string.h>
 #include <gmapping/sensor/sensor_base/sensorreading.h>
 #include <gmapping/utils/point.h>
-#include "gmapping/sensor/sensor_odometry/odometrysensor.h"
+#include "odometrysensor.h"
 
 namespace GMapping{
 

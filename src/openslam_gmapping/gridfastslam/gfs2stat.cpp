@@ -2,7 +2,7 @@
 #include <gmapping/particlefilter/particlefilter.h>
 #include <iostream>
 #include <fstream>
-#include "gmapping/gridfastslam/gfsreader.h"
+#include "gfsreader.h"
 
 using namespace std;
 using namespace GMapping;

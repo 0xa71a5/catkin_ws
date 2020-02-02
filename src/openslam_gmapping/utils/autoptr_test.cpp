@@ -1,5 +1,5 @@
 #include <iostream>
-#include "gmapping/utils/autoptr.h"
+#include "autoptr.h"
 
 using namespace std;
 using namespace GMapping;

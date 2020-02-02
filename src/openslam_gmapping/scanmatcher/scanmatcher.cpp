@@ -2,10 +2,9 @@
 #include <limits>
 #include <list>
 #include <iostream>
-#include <stdio.h>
 
-#include "gmapping/scanmatcher/scanmatcher.h"
-#include "gmapping/scanmatcher/gridlinetraversal.h"
+#include <gmapping/scanmatcher/scanmatcher.h>
+#include "gridlinetraversal.h"
 //#define GENERATE_MAPS
 
 namespace GMapping {
@@ -335,7 +334,6 @@ double ScanMatcher::icpOptimize(OrientedPoint& pnew, const ScanMatcherMap& map, 
 	return currentScore;
 }
 
-/* lxcdebug : m_matcher.optimize uses this function as the opt method */
 double ScanMatcher::optimize(OrientedPoint& pnew, const ScanMatcherMap& map, const OrientedPoint& init, const double* readings) const{
 	double bestScore=-1;
 	OrientedPoint currentPose=init;

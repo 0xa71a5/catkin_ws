@@ -1,8 +1,8 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <gmapping/log/carmenconfiguration.h>
-#include <gmapping/log/sensorlog.h>
+#include <log/carmenconfiguration.h>
+#include <log/sensorlog.h>
 
 
 using namespace std;

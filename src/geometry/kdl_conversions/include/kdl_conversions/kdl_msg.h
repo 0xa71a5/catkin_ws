@@ -41,7 +41,6 @@
 #include <geometry_msgs/Vector3.h>
 #include <geometry_msgs/Wrench.h>
 
-#include <ros/macros.h>
 
 namespace tf {
 /// Conversion functions from/to the corresponding KDL and geometry_msgs types.
@@ -91,18 +90,18 @@ void wrenchKDLToMsg(const KDL::Wrench &k, geometry_msgs::Wrench &m);
 
 //Deprecated methods use above:
 /// Converts a Pose message into a KDL Frame
-ROS_DEPRECATED void PoseMsgToKDL(const geometry_msgs::Pose &m, KDL::Frame &k);
+void PoseMsgToKDL(const geometry_msgs::Pose &m, KDL::Frame &k)__attribute__((deprecated));
 
 /// Converts a KDL Frame into a Pose message 
-ROS_DEPRECATED void PoseKDLToMsg(const KDL::Frame &k, geometry_msgs::Pose &m);
+void PoseKDLToMsg(const KDL::Frame &k, geometry_msgs::Pose &m) __attribute__((deprecated));
 
 
 
 /// Converts a Twist message into a KDL Twist
-ROS_DEPRECATED void TwistMsgToKDL(const geometry_msgs::Twist &m, KDL::Twist &k);
+void TwistMsgToKDL(const geometry_msgs::Twist &m, KDL::Twist &k) __attribute__((deprecated));
 
 /// Converts a KDL Twist into a Twist message
-ROS_DEPRECATED void TwistKDLToMsg(const KDL::Twist &k, geometry_msgs::Twist &m);
+void TwistKDLToMsg(const KDL::Twist &k, geometry_msgs::Twist &m) __attribute__((deprecated));
 
 
 

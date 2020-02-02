@@ -140,10 +140,23 @@ namespace dwa_local_planner {
 
     ROS_INFO("Got new plan, size=%d", orig_global_plan.size());
 
-    if (orig_global_plan.size()) {
-        for (int i = 0; i < orig_global_plan.size(); i++) {
-            printf("(%2.1f,%2.1f) ", orig_global_plan[i].pose.position.x,
-                    orig_global_plan[i].pose.position.y);
+    int temp_size = orig_global_plan.size();
+    if (temp_size) {
+        printf("                                                                                ");
+        if (temp_size <= 10) {
+            for (int i = 0; i < orig_global_plan.size(); i++) {
+                printf("(%2.1f,%2.1f) ", orig_global_plan[i].pose.position.x,
+                        orig_global_plan[i].pose.position.y);
+            }
+        } else {
+            for (int i = 0; i < 5; i++) {
+                printf("(%2.1f,%2.1f) ", orig_global_plan[i].pose.position.x,
+                        orig_global_plan[i].pose.position.y);
+            }
+            for (int i = temp_size - 5; i < temp_size; i++) {
+                printf("(%2.1f,%2.1f) ", orig_global_plan[i].pose.position.x,
+                        orig_global_plan[i].pose.position.y);
+            }
         }
         printf("\n");
     }

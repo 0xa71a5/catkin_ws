@@ -1,4 +1,4 @@
-#include "gmapping/gui/qslamandnavwidget.h"
+#include "qslamandnavwidget.h"
 #include <stdio.h>
 using namespace GMapping;
 

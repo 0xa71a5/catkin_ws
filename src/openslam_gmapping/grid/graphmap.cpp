@@ -1,9 +1,9 @@
 #ifndef GRAPHMAP_H
 #define GRAPHMAP_H
 #include <list>
-#include <gmapping/utils/point.h>
+#include <utils/point.h>
 #include <utils/graph.h>
-#include <gmapping/grid/map.h>
+#include <grid/map.h>
 
 namespace GMapping {
 

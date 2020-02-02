@@ -89,9 +89,8 @@ bool LatchedStopRotateController::isGoalReached(LocalPlannerUtil* planner_util,
   double goal_y = goal_pose.getOrigin().getY();
   double cur_x  = global_pose.getOrigin().x();
   double cur_y  = global_pose.getOrigin().y();
-  ROS_INFO("lxcdebug: cur=(%3.1f,%3.1f) goal=(%3.1f,%3.1f) tolerance=%3.1f latch_tor=%d xy_tor=%d",
-          cur_x, cur_y, goal_x, goal_y, xy_goal_tolerance,
-          latch_xy_goal_tolerance_, xy_tolerance_latch_);
+  ROS_INFO("lxcdebug: cur=(%3.1f,%3.1f) goal=(%3.1f,%3.1f) tolerance=%3.1f",
+          cur_x, cur_y, goal_x, goal_y, xy_goal_tolerance);
 
   base_local_planner::LocalPlannerLimits limits = planner_util->getCurrentLimits();
 
@@ -119,7 +118,7 @@ bool LatchedStopRotateController::isGoalReached(LocalPlannerUtil* planner_util,
       }
     } else {
         failed_times++;
-        if (failed_times >= 10) {
+        if (failed_times >= 1000) {
             failed_times = 0;
             ROS_INFO("lxcdebug: ================ failed 10 times =============");
             return true;

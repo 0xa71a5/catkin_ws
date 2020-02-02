@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iomanip>
 #include <gmapping/utils/stat.h>
-#include "gmapping/gridfastslam/gridslamprocessor.h"
+#include <gmapping/gridfastslam/gridslamprocessor.h>
 
 //#define MAP_CONSISTENCY_CHECK
 //#define GENERATE_TRAJECTORIES
@@ -74,7 +74,6 @@ using namespace std;
     cerr << __PRETTY_FUNCTION__ <<  ": trajectories copy.... ";
 #endif
     TNodeVector v=gsp.getTrajectories();
-    printf("lxcdebug: ##### gsp.getTrajectories size is %d\n", v.size());
     for (unsigned int i=0; i<v.size(); i++){
 		m_particles[i].node=v[i];
     }
@@ -282,8 +281,6 @@ void GridSlamProcessor::setMotionModelParameters
 	<< " -particles "<< size << endl;
     
 
-    /* lxcdebug: m_particles is inited here */
-    printf("lxcdebug: ###### enter init, size=%d\n", size);
     m_particles.clear();
     TNode* node=new TNode(initialPose, 0, 0, 0);
     ScanMatcherMap lmap(Point(xmin+xmax, ymin+ymax)*.5, xmax-xmin, ymax-ymin, delta);
@@ -318,7 +315,6 @@ void GridSlamProcessor::setMotionModelParameters
   
   bool GridSlamProcessor::processScan(const RangeReading & reading, int adaptParticles){
     
-      printf("lxcdebug: enter processScan\n");
     /**retireve the position from the reading, and compute the odometry*/
     OrientedPoint relPose=reading.getPose();
     if (!m_count){
@@ -420,7 +416,7 @@ void GridSlamProcessor::setMotionModelParameters
                                reading.getTime());
 
       if (m_count>0){
-	scanMatch(plainReading);//This tooks a long long time!
+	scanMatch(plainReading);
 	if (m_outputStream.is_open()){
 	  m_outputStream << "LASER_READING "<< reading.size() << " ";
 	  m_outputStream << setiosflags(ios::fixed) << setprecision(2);
@@ -439,7 +435,6 @@ void GridSlamProcessor::setMotionModelParameters
 	  m_outputStream << endl;
 	}
 	onScanmatchUpdate();
-    printf("lxcdebug: leave processScan:%d\n",__LINE__);
 	
 	updateTreeWeights(false);
 				
@@ -487,7 +482,6 @@ void GridSlamProcessor::setMotionModelParameters
     if (m_outputStream.is_open())
       m_outputStream << flush;
     m_readingCount++;
-    printf("lxcdebug: leave processScan:%d\n",__LINE__);
     return processed;
   }
   

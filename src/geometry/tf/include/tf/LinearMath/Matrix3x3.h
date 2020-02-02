@@ -19,8 +19,6 @@ subject to the following restrictions:
 #include "Vector3.h"
 #include "Quaternion.h"
 
-#include <ros/macros.h>
-
 namespace tf
 {
 
@@ -165,7 +163,7 @@ public:
 	*  @param pitch Pitch about Y axis
 	*  @param roll Roll about X axis 
 	*/
-	ROS_DEPRECATED void setEulerZYX(const tfScalar& yaw, const tfScalar& pitch, const tfScalar& roll)
+	void setEulerZYX(const tfScalar& yaw, const tfScalar& pitch, const tfScalar& roll) __attribute__((deprecated))
 	{
 		setEulerYPR(yaw, pitch, roll);
 	}
@@ -281,7 +279,7 @@ public:
 	* @param pitch Pitch around Y axis
 	* @param roll around X axis 
  	* @param solution_number Which solution of two possible solutions ( 1 or 2) are possible values*/	
-	ROS_DEPRECATED void getEulerZYX(tfScalar& yaw, tfScalar& pitch, tfScalar& roll, unsigned int solution_number = 1) const
+	__attribute__((deprecated)) void getEulerZYX(tfScalar& yaw, tfScalar& pitch, tfScalar& roll, unsigned int solution_number = 1) const
 	{
 		getEulerYPR(yaw, pitch, roll, solution_number);
 	};

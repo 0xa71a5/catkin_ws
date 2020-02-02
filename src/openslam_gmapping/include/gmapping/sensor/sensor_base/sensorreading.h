@@ -1,7 +1,7 @@
 #ifndef SENSORREADING_H
 #define SENSORREADING_H
 
-#include "gmapping/sensor/sensor_base/sensor.h"
+#include "sensor.h"
 namespace GMapping{
 
 class SensorReading{

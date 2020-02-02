@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(gmapping)
 
-add_compile_options(-std=c++11)
-
 find_package(catkin REQUIRED nav_msgs nodelet openslam_gmapping roscpp tf rosbag_storage)
 
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED signals)
 
 include_directories(${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
 

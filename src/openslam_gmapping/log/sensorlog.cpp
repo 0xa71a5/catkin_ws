@@ -1,10 +1,10 @@
-#include "gmapping/log/sensorlog.h"
+#include "sensorlog.h"
 
 #include <iostream>
 #include <sstream>
 #include <assert.h>
-#include <gmapping/sensor/sensor_odometry/odometrysensor.h>
-#include <gmapping/sensor/sensor_range/rangesensor.h>
+#include <sensor_odometry/odometrysensor.h>
+#include <sensor_range/rangesensor.h>
 
 #define LINEBUFFER_SIZE 100000
 

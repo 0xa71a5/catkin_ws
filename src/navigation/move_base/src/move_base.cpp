@@ -860,6 +860,7 @@ namespace move_base {
     switch(state_){
       //if we are in a planning state, then we'll attempt to make a plan
       case PLANNING:
+          ROS_INFO("move_base state : PLANNING");
         {
           boost::recursive_mutex::scoped_lock lock(planner_mutex_);
           runPlanner_ = true;
@@ -870,6 +871,7 @@ namespace move_base {
 
       //if we're controlling, we'll attempt to find valid velocity commands
       case CONTROLLING:
+          ROS_INFO("move_base state : CONTROLLING");
         ROS_DEBUG_NAMED("move_base","In controlling state.");
 
         //check to see if we've reached our goal
@@ -938,17 +940,18 @@ namespace move_base {
 
       //we'll try to clear out space with any user-provided recovery behaviors
       case CLEARING:
+          ROS_INFO("move_base state : CLEARING");
         ROS_DEBUG_NAMED("move_base","In clearing/recovery state");
         //we'll invoke whatever recovery behavior we're currently on if they're enabled
         if(recovery_behavior_enabled_ && recovery_index_ < recovery_behaviors_.size()){
-          ROS_DEBUG_NAMED("move_base_recovery","Executing behavior %u of %zu", recovery_index_, recovery_behaviors_.size());
+          ROS_INFO_NAMED("move_base_recovery","Executing behavior %u of %zu", recovery_index_, recovery_behaviors_.size());
           recovery_behaviors_[recovery_index_]->runBehavior();
 
           //we at least want to give the robot some time to stop oscillating after executing the behavior
           last_oscillation_reset_ = ros::Time::now();
 
           //we'll check if the recovery behavior actually worked
-          ROS_DEBUG_NAMED("move_base_recovery","Going back to planning state");
+          ROS_INFO_NAMED("move_base_recovery","Going back to planning state");
           last_valid_plan_ = ros::Time::now();
           planning_retries_ = 0;
           state_ = PLANNING;
@@ -957,13 +960,13 @@ namespace move_base {
           recovery_index_++;
         }
         else{
-          ROS_DEBUG_NAMED("move_base_recovery","All recovery behaviors have failed, locking the planner and disabling it.");
+          ROS_INFO_NAMED("move_base_recovery","All recovery behaviors have failed, locking the planner and disabling it.");
           //disable the planner thread
           boost::unique_lock<boost::recursive_mutex> lock(planner_mutex_);
           runPlanner_ = false;
           lock.unlock();
 
-          ROS_DEBUG_NAMED("move_base_recovery","Something should abort after this.");
+          ROS_INFO_NAMED("move_base_recovery","Something should abort after this.");
 
           if(recovery_trigger_ == CONTROLLING_R){
             ROS_ERROR("Aborting because a valid control could not be found. Even after executing all recovery behaviors");
@@ -977,6 +980,7 @@ namespace move_base {
             ROS_ERROR("Aborting because the robot appears to be oscillating over and over. Even after executing all recovery behaviors");
             as_->setAborted(move_base_msgs::MoveBaseResult(), "Robot is oscillating. Even after executing recovery behaviors.");
           }
+          ROS_INFO("reset state");
           resetState();
           return true;
         }

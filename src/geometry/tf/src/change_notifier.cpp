@@ -31,7 +31,7 @@
 
 #include "ros/ros.h"
 #include "tf/transform_listener.h"
-#include "xmlrpcpp/XmlRpcValue.h"
+#include "XmlRpcValue.h"
 
 class FramePair
 {

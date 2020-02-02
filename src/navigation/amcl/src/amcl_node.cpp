@@ -127,7 +127,7 @@ class AmclNode
     // Use a child class to get access to tf2::Buffer class inside of tf_
     struct TransformListenerWrapper : public tf::TransformListener
     {
-      inline std::shared_ptr<tf2_ros::Buffer> getBuffer() {return tf2_buffer_ptr_;}
+      inline tf2_ros::Buffer &getBuffer() {return tf2_buffer_;}
     };
 
     TransformListenerWrapper* tf_;
@@ -656,7 +656,7 @@ void AmclNode::runFromBag(const std::string &in_bag_fn)
       tf_pub.publish(msg);
       for (size_t ii=0; ii<tf_msg->transforms.size(); ++ii)
       {
-        tf_->getBuffer()->setTransform(tf_msg->transforms[ii], "rosbag_authority");
+        tf_->getBuffer().setTransform(tf_msg->transforms[ii], "rosbag_authority");
       }
       continue;
     }

@@ -38,6 +38,20 @@
 #include <tf2_ros/transform_listener.h>
 #include <ros/ros.h>
 
+
+class MyClass
+{
+public:
+  MyClass() {}
+  MyClass(double d) {}
+};
+
+class BlankClass
+{
+public:
+  BlankClass() {}
+};
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "tf_buffer");
@@ -46,26 +60,13 @@ int main(int argc, char** argv)
   double buffer_size;
   nh.param("buffer_size", buffer_size, 120.0);
 
-  bool publish_frame_service;
-  nh.param("publish_frame_service", publish_frame_service, false);
-
-  // Legacy behavior re: #209
-  bool use_node_namespace;
-  nh.param("use_node_namespace", use_node_namespace, false);
-  std::string node_name;
-  if (use_node_namespace)
-  {
-    node_name = ros::this_node::getName();
-  }
-  else
-  {
-    node_name = "tf2_buffer_server";
-  }
-
-  tf2_ros::Buffer buffer_core(ros::Duration(buffer_size), publish_frame_service);
+  // WIM: this works fine:
+  tf2_ros::Buffer buffer_core(ros::Duration(buffer_size+0)); // WTF??
   tf2_ros::TransformListener listener(buffer_core);
-  tf2_ros::BufferServer buffer_server(buffer_core, node_name , false);
+  tf2_ros::BufferServer buffer_server(buffer_core, "tf2_buffer_server", false);
   buffer_server.start();
+  // But you should probably read this instead:
+  // http://www.informit.com/guides/content.aspx?g=cplusplus&seqNum=439
 
   ros::spin();
 }

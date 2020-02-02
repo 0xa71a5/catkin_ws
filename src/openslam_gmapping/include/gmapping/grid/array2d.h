@@ -3,9 +3,13 @@
 
 #include <assert.h>
 #include <gmapping/utils/point.h>
-#include "gmapping/grid/accessstate.h"
+#include "accessstate.h"
 
 #include <iostream>
+
+#ifndef __PRETTY_FUNCTION__
+#define __FUNCDNAME__
+#endif
 
 namespace GMapping {
 

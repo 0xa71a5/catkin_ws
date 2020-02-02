@@ -1,4 +1,4 @@
-#include "gmapping/log/configuration.h"
+#include "configuration.h"
 
 namespace GMapping {
 

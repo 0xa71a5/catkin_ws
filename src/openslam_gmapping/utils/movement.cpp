@@ -1,5 +1,5 @@
-#include "gmapping/utils/movement.h"
-#include "gmapping/utils/gvalues.h"
+#include "movement.h"
+#include <gmapping/utils/gvalues.h>
 
 namespace GMapping {
 

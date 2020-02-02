@@ -1,4 +1,4 @@
-#include "gmapping/gui/qpixmapdumper.h"
+#include "qpixmapdumper.h"
 #include <cstdio>
 #include <cstring>
 
