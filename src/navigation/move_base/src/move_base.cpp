@@ -876,7 +876,7 @@ namespace move_base {
 
         //check to see if we've reached our goal
         if(tc_->isGoalReached()){
-          ROS_DEBUG_NAMED("move_base","Goal reached!");
+          ROS_INFO_NAMED("move_base","Goal reached!");
           resetState();
 
           //disable the planner thread
@@ -901,8 +901,12 @@ namespace move_base {
          boost::unique_lock<costmap_2d::Costmap2D::mutex_t> lock(*(controller_costmap_ros_->getCostmap()->getMutex()));
         
         if(tc_->computeVelocityCommands(cmd_vel)){
-          ROS_DEBUG_NAMED( "move_base", "Got a valid command from the local planner: %.3lf, %.3lf, %.3lf",
+          ROS_INFO_NAMED( "move_base", "Got a valid command from the local planner: %.3lf, %.3lf, %.3lf",
                            cmd_vel.linear.x, cmd_vel.linear.y, cmd_vel.angular.z );
+          if (cmd_vel.linear.x == 0 && cmd_vel.angular.z != 0) {
+              cmd_vel.linear.x = 0.16;
+              ROS_INFO("this is a fix-turn , set line-x speed to non-zero!");
+          }
           last_valid_control_ = ros::Time::now();
           //make sure that we send the velocity command to the base
           vel_pub_.publish(cmd_vel);
@@ -910,7 +914,7 @@ namespace move_base {
             recovery_index_ = 0;
         }
         else {
-          ROS_DEBUG_NAMED("move_base", "The local planner could not find a valid plan.");
+          ROS_INFO_NAMED("move_base", "The local planner could not find a valid plan.");
           ros::Time attempt_end = last_valid_control_ + ros::Duration(controller_patience_);
 
           //check if we've tried to find a valid control for longer than our time limit
