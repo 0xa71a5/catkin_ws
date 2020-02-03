@@ -237,17 +237,20 @@ namespace dwa_local_planner {
 
     //if we cannot move... tell someone
     std::vector<geometry_msgs::PoseStamped> local_plan;
+#if 0
+    // we offen failed at here!
     if(path.cost_ < 0) {
-      ROS_DEBUG_NAMED("dwa_local_planner",
-          "The dwa local planner failed to find a valid plan, cost functions discarded all candidates. This can mean there is an obstacle too close to the robot.");
+          ROS_ERROR("The dwa local planner failed to find a valid plan, cost functions discarded all candidates. This can mean there is an obstacle too close to the robot.");
       local_plan.clear();
       publishLocalPlan(local_plan);
       return false;
     }
+#endif
 
-    ROS_DEBUG_NAMED("dwa_local_planner", "A valid velocity command of (%.2f, %.2f, %.2f) was found for this cycle.",
+    ROS_INFO_NAMED("dwa_local_planner", "A valid velocity command of (%.2f, %.2f, %.2f) was found for this cycle.",
                     cmd_vel.linear.x, cmd_vel.linear.y, cmd_vel.angular.z);
 
+    // Here we publish the local plan!
     // Fill out the local plan
     for(unsigned int i = 0; i < path.getPointsSize(); ++i) {
       double p_x, p_y, p_th;
@@ -312,6 +315,7 @@ namespace dwa_local_planner {
           boost::bind(&DWAPlanner::checkTrajectory, dp_, _1, _2, _3));
     } else {
       bool isOk = dwaComputeVelocityCommands(current_pose_, cmd_vel);
+      ROS_INFO("dwaComputeVelocityCommands returns %d", isOk);
       if (isOk) {
         publishGlobalPlan(transformed_plan);
       } else {
