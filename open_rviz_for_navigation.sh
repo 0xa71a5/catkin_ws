@@ -1,0 +1,1 @@
+roslaunch robot_navigation navigation_rviz.launch
