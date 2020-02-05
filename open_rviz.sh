@@ -1,1 +1,0 @@
-roslaunch robot_navigation slam_rviz.launch

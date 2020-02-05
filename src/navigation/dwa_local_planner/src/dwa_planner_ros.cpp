@@ -247,7 +247,7 @@ namespace dwa_local_planner {
     }
 #endif
 
-    ROS_INFO_NAMED("dwa_local_planner", "A valid velocity command of (%.2f, %.2f, %.2f) was found for this cycle.",
+    ROS_DEBUG_NAMED("dwa_local_planner", "A valid velocity command of (%.2f, %.2f, %.2f) was found for this cycle.",
                     cmd_vel.linear.x, cmd_vel.linear.y, cmd_vel.angular.z);
 
     // Here we publish the local plan!
@@ -315,7 +315,7 @@ namespace dwa_local_planner {
           boost::bind(&DWAPlanner::checkTrajectory, dp_, _1, _2, _3));
     } else {
       bool isOk = dwaComputeVelocityCommands(current_pose_, cmd_vel);
-      ROS_INFO("dwaComputeVelocityCommands returns %d", isOk);
+      ROS_DEBUG("dwaComputeVelocityCommands returns %d", isOk);
       if (isOk) {
         publishGlobalPlan(transformed_plan);
       } else {

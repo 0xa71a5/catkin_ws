@@ -555,7 +555,7 @@ namespace move_base {
   }
 
   void MoveBase::planThread(){
-    ROS_DEBUG_NAMED("move_base_plan_thread","Starting planner thread...");
+    ROS_INFO_NAMED("move_base_plan_thread","Starting planner thread...");
     ros::NodeHandle n;
     ros::Timer timer;
     bool wait_for_wake = false;
@@ -564,7 +564,7 @@ namespace move_base {
       //check if we should run the planner (the mutex is locked)
       while(wait_for_wake || !runPlanner_){
         //if we should not be running the planner then suspend this thread
-        ROS_DEBUG_NAMED("move_base_plan_thread","Planner thread is suspending");
+        ROS_INFO_NAMED("move_base_plan_thread","Planner thread is suspending");
         planner_cond_.wait(lock);
         wait_for_wake = false;
       }
@@ -573,14 +573,14 @@ namespace move_base {
       //time to plan! get a copy of the goal and unlock the mutex
       geometry_msgs::PoseStamped temp_goal = planner_goal_;
       lock.unlock();
-      ROS_DEBUG_NAMED("move_base_plan_thread","Planning...");
+      ROS_INFO_NAMED("move_base_plan_thread","Planning...");
 
       //run planner
       planner_plan_->clear();
       bool gotPlan = n.ok() && makePlan(temp_goal, *planner_plan_);
 
       if(gotPlan){
-        ROS_DEBUG_NAMED("move_base_plan_thread","Got Plan with %zu points!", planner_plan_->size());
+        ROS_INFO_NAMED("move_base_plan_thread","Got Plan with %zu points!", planner_plan_->size());
         //pointer swap the plans under mutex (the controller will pull from latest_plan_)
         std::vector<geometry_msgs::PoseStamped>* temp_plan = planner_plan_;
 
@@ -602,7 +602,7 @@ namespace move_base {
       }
       //if we didn't get a plan and we are in the planning state (the robot isn't moving)
       else if(state_==PLANNING){
-        ROS_DEBUG_NAMED("move_base_plan_thread","No Plan...");
+        ROS_INFO_NAMED("move_base_plan_thread","No Plan...");
         ros::Time attempt_end = last_valid_plan_ + ros::Duration(planner_patience_);
 
         //check if we've tried to make a plan for over our time limit or our maximum number of retries
@@ -613,6 +613,7 @@ namespace move_base {
         if(runPlanner_ &&
            (ros::Time::now() > attempt_end || planning_retries_ > uint32_t(max_planning_retries_))){
           //we'll move into our obstacle clearing mode
+          ROS_INFO("Set state_ to CLEARING mode to move into obstacle");
           state_ = CLEARING;
           runPlanner_ = false;  // proper solution for issue #523
           publishZeroVelocity();
@@ -901,11 +902,11 @@ namespace move_base {
          boost::unique_lock<costmap_2d::Costmap2D::mutex_t> lock(*(controller_costmap_ros_->getCostmap()->getMutex()));
         
         if(tc_->computeVelocityCommands(cmd_vel)){
-          ROS_INFO_NAMED( "move_base", "Got a valid command from the local planner: %.3lf, %.3lf, %.3lf",
+          ROS_DEBUG_NAMED( "move_base", "Got a valid command from the local planner: %.3lf, %.3lf, %.3lf",
                            cmd_vel.linear.x, cmd_vel.linear.y, cmd_vel.angular.z );
           if (cmd_vel.linear.x == 0 && cmd_vel.angular.z != 0) {
               cmd_vel.linear.x = 0.16;
-              ROS_INFO("this is a fix-turn , set line-x speed to non-zero!");
+              //ROS_INFO("this is a fix-turn , set line-x speed to non-zero!");
           }
           last_valid_control_ = ros::Time::now();
           //make sure that we send the velocity command to the base
